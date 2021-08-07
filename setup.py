@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 # Copyright (c) Materials Virtual Lab
 # Distributed under the terms of the Modified BSD License.
 
@@ -13,18 +13,18 @@ with open(os.path.join(SETUP_PTH, "README.rst")) as f:
 
 
 setup(
-    name="pymatgen-analysis-myaddon",
-    packages=find_namespace_packages(include=["pymatgen.analysis.*"]),
+    name="pymatgen-io-fleur",
+    packages=find_namespace_packages(include=["pymatgen.io.*"]),
     version="0.0.1",
-    install_requires=["pymatgen>=2022.0.3"],
+    install_requires=["pymatgen>=2022.0.3", "masci-tools @ git+https://github.com/judftteam/masci-tools.git@write_inpgen_files"],
     extras_require={},
     package_data={},
-    author="materials virtual lab",
-    author_email="ongsp@eng.ucsd.edu",
-    maintainer="materials virtual lab",
-    url="https://github.com/materialsproject/pymatgen-addon-template",
+    author="Henning Janssen",
+    author_email="he.janssen@fz-juelich.de",
+    maintainer="Henning Janssen",
+    url="https://github.com/janssenhenning/pymatgen-io-fleur",
     license="BSD",
-    description="A template for creating add-ons for pymatgen.",
+    description="A pymatgen add-on for IO for the fleur code.",
     long_description=desc,
     keywords=["pymatgen"],
     classifiers=[
