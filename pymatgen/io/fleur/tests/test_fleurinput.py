@@ -42,7 +42,7 @@ class FleurInputTest(PymatgenTest):
 
         self.assertArrayAlmostEqual(lattice, f.structure.lattice.matrix.tolist())
         self.assertEqual(atoms, [site.specie.symbol for site in f.structure])
-        self.assertEqual(fraccoords, [site.frac_coords.tolist() for site in f.structure])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in f.structure])
         self.assertEqual(parameters, f.lapw_parameters)
         self.assertEqual(title, f.title)
 
@@ -66,6 +66,6 @@ class FleurInputTest(PymatgenTest):
 
         self.assertArrayAlmostEqual(lattice, f.structure.lattice.matrix.tolist())
         self.assertEqual(atoms, [site.specie.symbol for site in f.structure])
-        self.assertEqual(fraccoords, [site.frac_coords.tolist() for site in f.structure])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in f.structure])
         self.assertEqual(parameters, f.lapw_parameters)
         self.assertEqual(title, f.title)
