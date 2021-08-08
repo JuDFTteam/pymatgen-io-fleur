@@ -143,7 +143,6 @@ class FleurInputTest(PymatgenTest):
         self.assertTrue(self.assertStrContentEqual(expected_inpgen_content, f.get_inpgen_file_content()))
         self.assertTrue(self.assertStrContentEqual(expected_inpgen_content, str(f)))
 
-
     def test_inpgen_file_roundtrip(self):
         """
         Test that the inpgen file can be reproduced reading it in and writing back out
@@ -152,15 +151,14 @@ class FleurInputTest(PymatgenTest):
 
         f = FleurInput.from_file(TEST_FILES_DIR / "inp_test")
 
-        with open(TEST_FILES_DIR / "inp_test",'r') as file:
+        with open(TEST_FILES_DIR / "inp_test", "r") as file:
             original = file.read()
 
-        with tempfile.NamedTemporaryFile(mode='w') as tmp:
+        with tempfile.NamedTemporaryFile(mode="w") as tmp:
             f.write_file(tmp.name)
-            with open(tmp.name, 'r') as inp:
+            with open(tmp.name, "r") as inp:
                 res = inp.read()
 
         print(original)
         print(res)
         self.assertTrue(self.assertStrContentEqual(original, res))
-
