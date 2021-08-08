@@ -24,13 +24,21 @@ class FleurInput(MSONable):
     Object for representing the data stored in the structure part of the
     fleur input.
 
-    Args:
-        structure (Structure):  Structure object.
-        title (str): Optional title for fleur input. Defaults to unit
-                     cell formula of structure. Defaults to None.
-        pbc (tuple of bools): Defines in which directions periodic boundary
-                              conditions apply
-        lapw_parameters (dict): Defines additional calculation parameters for FLEUR
+    .. attribute:: structure
+
+        Associated Structure.
+
+    .. attribute:: title
+
+        Optional title string.
+
+    .. attribute:: pbc
+
+        Tuple detemining in which directions there are periodic boundary conditions.
+
+    .. attribute:: lapw_parameters
+
+        Dict with additional LAPW calculation parameters
 
     """
 
@@ -41,6 +49,16 @@ class FleurInput(MSONable):
         pbc: Tuple[bool, bool, bool] = (True, True, True),
         lapw_parameters: dict = None,
     ):
+        """
+        Args:
+            structure (Structure):  Structure object.
+            title (str): Optional title for fleur input. Defaults to unit
+                         cell formula of structure. Defaults to None.
+            pbc (tuple of bools): Defines in which directions periodic boundary
+                                  conditions apply
+            lapw_parameters (dict): Defines additional calculation parameters for FLEUR
+
+        """
 
         if structure.is_ordered:
             self.structure = structure
