@@ -6,6 +6,7 @@ from pathlib import Path
 
 from pymatgen.util.testing import PymatgenTest
 from pymatgen.io.fleur import FleurInput
+from pymatgen.core import Structure, Lattice
 
 TEST_FILES_DIR = Path(__file__).absolute().parent / ".." / ".." / ".." / ".." / "test-files"
 
@@ -13,6 +14,30 @@ TEST_FILES_DIR = Path(__file__).absolute().parent / ".." / ".." / ".." / ".." / 
 class FleurInputTest(PymatgenTest):
 
     TEST_FILES_DIR = TEST_FILES_DIR
+
+    def test_mson_serializable(self):
+
+        param = 5.130606429
+        cell = [[0, param, param], [param, 0, param], [param, param, 0]]
+        atoms = ["Si", "Si"]
+        fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
+
+        title = "Generated pymatgen structure"
+        parameters = {
+            "atom": {
+                "element": "Si",
+                "rmt": 2.1,
+                "jri": 981,
+                "lmax": 12,
+                "lnonsph": 6,
+            },
+            "comp": {"kmax": 5.0, "gmaxxc": 12.5, "gmax": 15.0},
+            "kpt": {"div1": 17, "div2": 17, "div3": 17, "tkb": 0.0005},
+        }
+
+        struc = Structure(Lattice(cell), atoms, fraccoords)
+        f = FleurInput(struc, title, lapw_parameters=parameters)
+        self.assertMSONable(f)
 
     def test_from_file_inpgen(self):
         """
@@ -69,3 +94,73 @@ class FleurInputTest(PymatgenTest):
         self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in f.structure])
         self.assertEqual(parameters, f.lapw_parameters)
         self.assertEqual(title, f.title)
+
+    def test_get_inpgen_file_content(self):
+        """
+        Test of the get_inpgen_file_content method
+        """
+        param = 5.130606429
+        cell = [[0, param, param], [param, 0, param], [param, param, 0]]
+        atoms = ["Si", "Si"]
+        fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
+
+        title = "Generated pymatgen structure"
+        parameters = {
+            "atom": {
+                "element": "Si",
+                "rmt": 2.1,
+                "jri": 981,
+                "lmax": 12,
+                "lnonsph": 6,
+            },
+            "comp": {"kmax": 5.0, "gmaxxc": 12.5, "gmax": 15.0},
+            "kpt": {"div1": 17, "div2": 17, "div3": 17, "tkb": 0.0005},
+        }
+
+        struc = Structure(Lattice(cell), atoms, fraccoords)
+        f = FleurInput(struc, title, lapw_parameters=parameters)
+
+        expected_inpgen_content = """\
+        Generated pymatgen structure
+&input  cartesian=F /
+       0.000000000        5.130606429        5.130606429
+       5.130606429        0.000000000        5.130606429
+       5.130606429        5.130606429        0.000000000
+      1.0000000000
+       1.000000000        1.000000000        1.000000000
+
+      2
+         14       0.0000000000       0.0000000000       0.0000000000
+         14       0.2500000000       0.2500000000       0.2500000000
+&atom
+  element="Si"   jri=981   lmax=12   lnonsph=6   rmt=2.1 /
+&comp
+  gmax=15.0   gmaxxc=12.5   kmax=5.0 /
+&kpt
+  div1=17   div2=17   div3=17   tkb=0.0005 /
+        """
+
+        self.assertTrue(self.assertStrContentEqual(expected_inpgen_content, f.get_inpgen_file_content()))
+        self.assertTrue(self.assertStrContentEqual(expected_inpgen_content, str(f)))
+
+
+    def test_inpgen_file_roundtrip(self):
+        """
+        Test that the inpgen file can be reproduced reading it in and writing back out
+        """
+        import tempfile
+
+        f = FleurInput.from_file(TEST_FILES_DIR / "inp_test")
+
+        with open(TEST_FILES_DIR / "inp_test",'r') as file:
+            original = file.read()
+
+        with tempfile.NamedTemporaryFile(mode='w') as tmp:
+            f.write_file(tmp.name)
+            with open(tmp.name, 'r') as inp:
+                res = inp.read()
+
+        print(original)
+        print(res)
+        self.assertTrue(self.assertStrContentEqual(original, res))
+
