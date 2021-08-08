@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright (c)
 # Distributed under the terms of the MIT License
+#
+# FleurInput was adapted from the ExcitingInput class in the pymatgen main package
 """
 This module provides functionality and classes for creating pymatgen structures
 from fleur input files (http://flapw.de).
@@ -22,13 +24,13 @@ class FleurInput(MSONable):
     Object for representing the data stored in the structure part of the
     fleur input.
 
-    .. attribute:: structure
-
-        Associated Structure.
-
-    .. attribute:: title
-
-        Optional title string.
+    Args:
+        structure (Structure):  Structure object.
+        title (str): Optional title for fleur input. Defaults to unit
+                     cell formula of structure. Defaults to None.
+        pbc (tuple of bools): Defines in which directions periodic boundary
+                              conditions apply
+        lapw_parameters (dict): Defines additional calculation parameters for FLEUR
 
     """
 
@@ -39,14 +41,6 @@ class FleurInput(MSONable):
         pbc: Tuple[bool, bool, bool] = (True, True, True),
         lapw_parameters: dict = None,
     ):
-        """
-        Args:
-            structure (Structure):  Structure object.
-            title (str): Optional title for fleur input. Defaults to unit
-                         cell formula of structure. Defaults to None.
-            pbc (tuple of bools): Defines in which directions periodic boundary
-                                  conditions apply
-        """
 
         if structure.is_ordered:
             self.structure = structure
@@ -60,9 +54,19 @@ class FleurInput(MSONable):
             raise ValueError("Structure with partial occupancies cannot be " "converted into fleur input!")
 
     @staticmethod
-    def from_string(data: str, inpgen_input: bool = True, **kwargs) -> "FleurInput":
+    def from_string(data: Union[str, bytes], inpgen_input: bool = True, **kwargs) -> "FleurInput":
         """
-        Reads the exciting input from a string
+        Reads the fleur input from a string
+
+        Args:
+            data (str or bytes): data to read in
+            inpgen_input (bool): if True the input will be presumed to be a inpgen file
+                                 otherwise it is parsed into an xml tree and interpreted as a inp.xml file
+
+        Kwargs are passed on to :py:func:`~masci_tools.io.io_fleurxml.load_inpxml()` if the input
+        is interpreted as a XML file
+
+        returns: :py:class:`FleurInput` generated from the information read in from the data
         """
         from masci_tools.io.fleur_inpgen import read_inpgen_file
         from masci_tools.io.io_fleurxml import load_inpxml
@@ -89,8 +93,14 @@ class FleurInput(MSONable):
     @staticmethod
     def from_file(filename: PathLike) -> "FleurInput":
         """
-        :param filename: Filename
-        :return: ExcitingInput
+        Reads the fleur input from a file
+
+        Args:
+            filename (PathLike): file to read in. If the extension is .xml the the file
+                                 will be interpreted as the inp.xml file otherwise it is
+                                 assumed to be inpgen input
+
+        returns: :py:class:`FleurInput` generated from the information read in from the file
         """
 
         inpgen_input = ".xml" not in Path(filename).suffixes
@@ -106,7 +116,16 @@ class FleurInput(MSONable):
         self, parameters: dict = None, ignore_set_parameters: bool = False, **kwargs: Union[int, bool]
     ):
         """
-        Gets the inpgen file content.
+        Produce the inpgen input file corresponding to the given information
+
+        Args:
+            parameters (dict): Additional LAPW parameters to use
+            ignore_set_parameters (bool): if True only the passed parameters are used and the
+                                          ``lapw_parameters`` stored on the instance are ignored
+
+        Kwargs are passed on to :py:func:`~masci_tools.io.fleur_inpgen.write_inpgen_file()`
+
+        returns: str of the inpgen input file
         """
         from masci_tools.io.fleur_inpgen import write_inpgen_file
 
@@ -147,7 +166,7 @@ class FleurInput(MSONable):
     def from_dict(cls, d: dict) -> "FleurInput":
         """
         :param d: Dict representation.
-        :return: Poscar
+        :return: FleurInput
         """
         return FleurInput(
             Structure.from_dict(d["structure"]),
@@ -167,8 +186,16 @@ class FleurInput(MSONable):
 
     def write_file(self, filename: PathLike, **kwargs: Any):
         """
-        Writes FleurInput to a file. The supported kwargs are the same as those for
-        the FleurInput.get_inpgen_file_content method and are passed through directly.
+        Writes FleurInput to a file.
+
+        .. note::
+            Only the inpgen input is supported. Writing out a full
+            inp.xml file is not supported
+
+        Args:
+            filename (PathLike): file to write the inpgen input to
+
+        Kwargs are passed on to :py:meth:`FleurInput.get_inpgen_file_content()`
         """
 
         if filename.endswith(".xml"):
