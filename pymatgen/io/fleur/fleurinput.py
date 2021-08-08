@@ -59,7 +59,6 @@ class FleurInput(MSONable):
         from masci_tools.io.fleur_inpgen import read_inpgen_file
         from masci_tools.io.io_fleurxml import load_inpxml
         from masci_tools.util.xml.xml_getters import get_structure_data, get_parameter_data
-        from masci_tools.util.schema_dict_util import evaluate_text
 
         if inpgen_input:
             cell, atoms, pbc, parameters = read_inpgen_file(data)
@@ -68,7 +67,7 @@ class FleurInput(MSONable):
             xmltree, schema_dict = load_inpxml(data, **kwargs)
             atoms, cell, pbc = get_structure_data(xmltree, schema_dict, site_namedtuple=True)
             parameters = get_parameter_data(xmltree, schema_dict)
-            title_in = evaluate_text(xmltree, schema_dict, 'comment')
+            title_in = parameters.pop('title','')
 
         positions, elements, _ = zip(*atoms)
         # create lattice and structure object
@@ -103,6 +102,9 @@ class FleurInput(MSONable):
 
         if not ignore_set_parameters:
             parameters = {**self.lapw_parameters, **parameters}
+
+        if 'title' not in parameters:
+            parameters['title'] = self.title
 
         atom_sites = [(site.coords,site.specie.symbol[0],site.specie.symbol[0]) for site in self.structure.sites]
 
