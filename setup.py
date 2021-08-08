@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) Materials Virtual Lab
 # Distributed under the terms of the Modified BSD License.
-
+"""
+setup: usage: pip install -e .
+"""
+import os
 from setuptools import setup, find_namespace_packages
 
-import os
 
 SETUP_PTH = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,7 +18,10 @@ setup(
     name="pymatgen-io-fleur",
     packages=find_namespace_packages(include=["pymatgen.io.*"]),
     version="0.0.1",
-    install_requires=["pymatgen>=2022.0.3", "masci-tools @ git+https://github.com/judftteam/masci-tools.git@write_inpgen_files"],
+    install_requires=[
+        "pymatgen>=2022.0.3",
+        "masci-tools @ git+https://github.com/judftteam/masci-tools.git@write_inpgen_files",
+    ],
     extras_require={},
     package_data={},
     author="Henning Janssen",

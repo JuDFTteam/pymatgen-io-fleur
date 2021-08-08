@@ -8,8 +8,6 @@ repos:
       - id: fix-encoding-pragma
       - id: mixed-line-ending
         types: [python]
-      - id: double-quote-string-fixer
-        types: [python]
       - id: flake8
         args: ["--max-line-length=120"]
   - repo: https://github.com/psf/black

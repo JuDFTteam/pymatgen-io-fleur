@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 """
 pymatgen-io-fleur provides IO for the fleur code.
 """
 
-from .fleurinput import *
+from .fleurinput import FleurInput
 
-__all__ = (fleurinput.__all__)
+__all__ = ("FleurInput",)
