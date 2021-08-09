@@ -20,7 +20,7 @@ setup(
     version="0.0.1",
     install_requires=[
         "pymatgen>=2022.0.3",
-        "masci-tools @ git+https://github.com/judftteam/masci-tools.git@write_inpgen_files",
+        "masci-tools @ git+https://github.com/judftteam/masci-tools.git@develop",
     ],
     extras_require={},
     package_data={},
