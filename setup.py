@@ -28,10 +28,10 @@ setup(
     author_email="he.janssen@fz-juelich.de",
     maintainer="Henning Janssen",
     url="https://github.com/janssenhenning/pymatgen-io-fleur",
-    license="BSD",
+    license="MIT",
     description="A pymatgen add-on for IO for the fleur code.",
     long_description=desc,
-    keywords=["pymatgen"],
+    keywords=["pymatgen", "fleur"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
