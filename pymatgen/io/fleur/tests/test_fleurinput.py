@@ -85,7 +85,16 @@ class FleurInputTest(PymatgenTest):
         title = "Si bulk"
         parameters = {
             "comp": {"jspins": 1, "frcor": False, "ctail": True, "kcrel": 0, "gmax": 11.1, "gmaxxc": 9.2, "kmax": 3.5},
-            "atom0": {"rmt": 2.17, "dx": 0.016, "jri": 717, "lmax": 8, "lnonsph": 6, "element": "Si", "lo": "2s 2p", "id": "14.1"},
+            "atom0": {
+                "rmt": 2.17,
+                "dx": 0.016,
+                "jri": 717,
+                "lmax": 8,
+                "lnonsph": 6,
+                "element": "Si",
+                "lo": "2s 2p",
+                "id": "14.1",
+            },
             "exco": {"xctyp": "pbe"},
         }
 
