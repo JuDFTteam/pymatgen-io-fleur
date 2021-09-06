@@ -3,6 +3,7 @@
 Tests of the FleurInput class
 """
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from pymatgen.util.testing import PymatgenTest
 from pymatgen.io.fleur import FleurInput
@@ -171,3 +172,127 @@ class FleurInputTest(PymatgenTest):
         print(original)
         print(res)
         self.assertTrue(self.assertStrContentEqual(original, res))
+
+
+class FleurInputStructureIntegrationTest(PymatgenTest):
+
+    TEST_FILES_DIR = TEST_FILES_DIR
+
+    def test_inpgen_from_string(self):
+        """
+        Test that the inpgen file is correctly parsed with teh from_str method of Structure
+        """
+
+        with open(TEST_FILES_DIR / "inp_test", "r") as f:
+            content = f.read()
+
+        s = Structure.from_str(content, fmt="fleur-inpgen")
+
+        param = 5.130606429
+        lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
+        atoms = ["Si", "Si"]
+        fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
+
+        self.assertArrayAlmostEqual(lattice, s.lattice.matrix.tolist())
+        self.assertEqual(atoms, [site.specie.symbol for site in s])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in s])
+
+    def test_fleur_xml_from_string(self):
+        """
+        Test that the fleur xml file is correctly parsed with the from_str method of Structure
+        """
+
+        with open(TEST_FILES_DIR / "inp.xml", "rb") as f:
+            content = f.read()
+
+        s = Structure.from_str(content, fmt="fleur")
+
+        param = 5.1306085
+        lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
+        atoms = ["Si", "Si"]
+        fraccoords = [[0.125, 0.125, 0.125], [-0.125, -0.125, -0.125]]
+
+        self.assertArrayAlmostEqual(lattice, s.lattice.matrix.tolist())
+        self.assertEqual(atoms, [site.specie.symbol for site in s])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in s])
+
+    def test_structure_to_inpgen_str(self):
+        """
+        Test that the to method of Structure produces the right output for the inpgen format
+        """
+
+        param = 5.130606429
+        cell = [[0, param, param], [param, 0, param], [param, param, 0]]
+        atoms = ["Si", "Si"]
+        fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
+
+        struc = Structure(Lattice(cell), atoms, fraccoords)
+
+        expected_inpgen_content = """\
+        Si2
+&input  cartesian=F /
+       0.000000000        5.130606429        5.130606429
+       5.130606429        0.000000000        5.130606429
+       5.130606429        5.130606429        0.000000000
+      1.0000000000
+       1.000000000        1.000000000        1.000000000
+
+      2
+         14       0.0000000000       0.0000000000       0.0000000000
+         14       0.2500000000       0.2500000000       0.2500000000
+        """
+
+        self.assertTrue(self.assertStrContentEqual(expected_inpgen_content, struc.to(fmt="fleur-inpgen")))
+
+    def test_structure_from_file_inpgen(self):
+        """
+        Test that the from_file method reads the inpgen input correctly
+        """
+
+        s = Structure.from_file(TEST_FILES_DIR / "inp_test")
+
+        param = 5.130606429
+        lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
+        atoms = ["Si", "Si"]
+        fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
+
+        self.assertArrayAlmostEqual(lattice, s.lattice.matrix.tolist())
+        self.assertEqual(atoms, [site.specie.symbol for site in s])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in s])
+
+    def test_structure_from_file_inpgen_alternate_name(self):
+        """
+        Test that the from_file method reads the inpgen input correctly
+        """
+
+        with open(TEST_FILES_DIR / "inp_test", "r") as f:
+            content = f.read()
+
+        with TemporaryDirectory() as td:
+            with open(Path(td) / "aiida.in", "w") as f:
+                f.write(content)
+            s = Structure.from_file(Path(td) / "aiida.in")
+
+        param = 5.130606429
+        lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
+        atoms = ["Si", "Si"]
+        fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
+
+        self.assertArrayAlmostEqual(lattice, s.lattice.matrix.tolist())
+        self.assertEqual(atoms, [site.specie.symbol for site in s])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in s])
+
+    def test_structure_from_file_xml(self):
+        """
+        Test that the XML file from fleur is correctly read in with the from_file method
+        """
+        s = Structure.from_file(TEST_FILES_DIR / "inp.xml")
+
+        param = 5.1306085
+        lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
+        atoms = ["Si", "Si"]
+        fraccoords = [[0.125, 0.125, 0.125], [-0.125, -0.125, -0.125]]
+
+        self.assertArrayAlmostEqual(lattice, s.lattice.matrix.tolist())
+        self.assertEqual(atoms, [site.specie.symbol for site in s])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in s])
