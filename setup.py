@@ -17,7 +17,7 @@ with open(os.path.join(SETUP_PTH, "README.rst")) as f:
 setup(
     name="pymatgen-io-fleur",
     packages=find_namespace_packages(include=["pymatgen.io.*"]),
-    version="0.1.1",
+    version="0.2.0",
     install_requires=[
         "pymatgen>=2022.0.15",
         "masci-tools>=0.5.0",
