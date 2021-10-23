@@ -45,7 +45,7 @@ Writing inpgen input back out
   #Adding some additional LAPW parameters
   fleur_inp.write_file('inp_new', parameters={'comp': {'kmax': 4.5}})
 
-Using from pymatgen ``Structure`` object (Not yet integrated)
+Usage from pymatgen ``Structure`` object
 
 .. code-block:: python
 
