@@ -29,6 +29,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-ci.txt --quiet
+        pip install -e .
     - name: mypy
       run: |
         mypy --namespace-packages --explicit-package-bases pymatgen
@@ -54,7 +55,7 @@ jobs:
       max-parallel: 20
       matrix:
         os: [ubuntu-latest]
-        python-version: [3.7,3.8,3.9]
+        python-version: ["3.7","3.8","3.9","3.10"]
 
     runs-on: ${{ matrix.os }}
 
@@ -64,15 +65,20 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Build pymatgen with compatible numpy
       run: |
         python -m pip install --upgrade pip
-        pip install --quiet -r requirements.txt -r requirements-ci.txt
-        pip install -e .
+        pip install numpy==1.21.4 wheel
+        pip install pymatgen==2022.0.16 --no-cache-dir --no-build-isolation
+    - name: Install dependencies
+      run: |
+        pip install --quiet -r requirements-ci.txt
+        pip install masci-tools
+        pip install --no-deps -e .
     - name: pytest
       run: |
         pytest --cov=pymatgen.io.fleur --durations=30 pymatgen
-  
+
   publish:
     name: Publish to PyPi
     needs: [tests, linting] #pylint-warnings could be added at some later point
@@ -84,12 +90,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Build package
+      - name: Install flit
         run: |
-          pip install wheel
-          python setup.py sdist bdist_wheel
-      - name: Publish to PyPi
-        uses: pypa/gh-action-pypi-publish@v1.1.0
+          pip install flit~=3.5
+      - name: Build and Publish to PyPi
+        run: |
+          flit publish
         with:
-          user: __token__
-          password: ${{ secrets.PYPI_KEY }}
+          FLIT_USERNAME: __token__
+          FLIT_PASSWORD: ${{ secrets.PYPI_KEY }}

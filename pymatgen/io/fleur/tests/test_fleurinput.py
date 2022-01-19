@@ -13,6 +13,9 @@ TEST_FILES_DIR = Path(__file__).absolute().parent / ".." / ".." / ".." / ".." / 
 
 
 class FleurInputTest(PymatgenTest):
+    """
+    Tests of the FleurInput class
+    """
 
     TEST_FILES_DIR = TEST_FILES_DIR
 
@@ -161,12 +164,12 @@ class FleurInputTest(PymatgenTest):
 
         f = FleurInput.from_file(TEST_FILES_DIR / "inp_test")
 
-        with open(TEST_FILES_DIR / "inp_test", "r") as file:
+        with open(TEST_FILES_DIR / "inp_test", "r", encoding="utf8") as file:
             original = file.read()
 
         with tempfile.NamedTemporaryFile(mode="w") as tmp:
             f.write_file(tmp.name)
-            with open(tmp.name, "r") as inp:
+            with open(tmp.name, "r", encoding="utf8") as inp:
                 res = inp.read()
 
         print(original)
@@ -175,6 +178,9 @@ class FleurInputTest(PymatgenTest):
 
 
 class FleurInputStructureIntegrationTest(PymatgenTest):
+    """
+    Tests of the writing/reading of fleur files from the main pymatgen structure
+    """
 
     TEST_FILES_DIR = TEST_FILES_DIR
 
@@ -183,7 +189,7 @@ class FleurInputStructureIntegrationTest(PymatgenTest):
         Test that the inpgen file is correctly parsed with teh from_str method of Structure
         """
 
-        with open(TEST_FILES_DIR / "inp_test", "r") as f:
+        with open(TEST_FILES_DIR / "inp_test", "r", encoding="utf8") as f:
             content = f.read()
 
         s = Structure.from_str(content, fmt="fleur-inpgen")
@@ -265,11 +271,11 @@ class FleurInputStructureIntegrationTest(PymatgenTest):
         Test that the from_file method reads the inpgen input correctly
         """
 
-        with open(TEST_FILES_DIR / "inp_test", "r") as f:
+        with open(TEST_FILES_DIR / "inp_test", "r", encoding="utf8") as f:
             content = f.read()
 
         with TemporaryDirectory() as td:
-            with open(Path(td) / "aiida.in", "w") as f:
+            with open(Path(td) / "aiida.in", "w", encoding="utf8") as f:
                 f.write(content)
             s = Structure.from_file(Path(td) / "aiida.in")
 
