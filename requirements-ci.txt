@@ -3,6 +3,6 @@ pytest-cov==3.0.0
 coverage==6.2
 mypy==0.931
 pydocstyle[toml]==6.1.1
-flake8==4.1.1
+flake8==4.0.1
 pylint==2.12.2
 black==21.12b0
