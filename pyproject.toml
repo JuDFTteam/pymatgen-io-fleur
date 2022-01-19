@@ -1,3 +1,78 @@
+[build-system]
+requires = ["flit_core >=3.5,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "pymatgen-io-fleur"
+dynamic = ["version"]  # read from masci_tools/__init__.py
+description= "A pymatgen add-on for IO for the fleur code."
+authors = [{name = "The JuDFT team", email = "he.janssen@fz-juelich.de"}]
+readme = "README.rst"
+license = {file = "LICENSE"}
+cclassifiers=[
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering :: Information Analysis",
+        "Topic :: Scientific/Engineering :: Physics",
+        "Topic :: Scientific/Engineering :: Chemistry",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ]
+keywords = ['pymatgen', 'fleur']
+requires-python = ">=3.7"
+dependencies = [
+          "pymatgen>=2022.0.15",
+          "masci-tools>=0.5.0",
+        ]
+
+[project.urls]
+Home = "https://github.com/JuDFTteam/pymatgen-io-fleur"
+Source = "https://github.com/JuDFTteam/pymatgen-io-fleur"
+
+[tool.flit.module]
+name = "pymatgen.io.fleur"
+
+[tool.flake8]
+exclude = [".git","__pycache__","docs_rst/conf.py","tests"]
+# max-complexity = 10
+extend-ignore = ["E741","W291","W293","E501","E231","E203","W605"]
+max-line-length = 120
+
+[tool.pytest.ini_options]
+addopts = "--durations=30 --quiet"
+
+[tool.pydocstyle]
+ignore = ["D105","D2","D4"]
+match-dir="(?!(tests)).*"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+omit = [
+  "*tests*"
+]
+relative_files = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "@deprecated",
+]
+
 [tool.black]
 line-length = 120
 target-version = ['py38']
@@ -19,3 +94,72 @@ exclude = '''
   )/
 )
 '''
+
+[tool.pylint.basic]
+good-names = [
+    "_",
+    "x",
+    "y",
+    "z",
+    "i",
+    "j",
+    "k",
+]
+no-docstring-rgx = "^_"
+docstring-min-length = 5
+
+[tool.pylint.classes]
+exclude-protected = [
+    "_asdict",
+    "_fields",
+    "_replace",
+    "_source",
+    "_make",
+    "_Element",
+    "_ElementTree",
+    "_pprint_dict",
+    "_pprint_set",
+    "_dispatch"
+    ]
+
+[tool.pylint.design]
+max-locals = 20
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.messages_control]
+disable = [
+    "too-few-public-methods",
+    "too-many-public-methods",
+    "bad-continuation",
+    "wrong-import-position",
+    "line-too-long",
+    "locally-disabled",
+    "wildcard-import",
+    "locally-enabled",
+    "too-many-instance-attributes",
+    "fixme",
+    "len-as-condition",
+    "wrong-import-order",
+    "import-outside-toplevel",
+    "duplicate-code",
+    "unnecessary-pass",
+    "invalid-name",
+    "unused-variable",
+    "unused-argument",
+    "unused-import",
+    "missing-function-docstring",
+    "too-many-locals",
+    "too-many-branches",
+    "no-self-use",
+    "c-extension-no-member",
+    "too-many-statements",
+    "too-many-nested-blocks",
+    "too-many-lines",
+    "too-many-return-statements",
+    "too-many-arguments",
+    "pointless-string-statement",
+    "no-member",
+    "consider-using-f-string"
+]

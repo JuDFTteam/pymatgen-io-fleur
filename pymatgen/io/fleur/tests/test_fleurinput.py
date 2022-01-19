@@ -13,6 +13,9 @@ TEST_FILES_DIR = Path(__file__).absolute().parent / ".." / ".." / ".." / ".." / 
 
 
 class FleurInputTest(PymatgenTest):
+    """
+    Tests of the FleurInput class
+    """
 
     TEST_FILES_DIR = TEST_FILES_DIR
 
@@ -175,6 +178,9 @@ class FleurInputTest(PymatgenTest):
 
 
 class FleurInputStructureIntegrationTest(PymatgenTest):
+    """
+    Tests of the writing/reading of fleur files from the main pymatgen structure
+    """
 
     TEST_FILES_DIR = TEST_FILES_DIR
 
