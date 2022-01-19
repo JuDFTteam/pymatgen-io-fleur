@@ -3,7 +3,7 @@
 pymatgen-io-fleur provides IO for the fleur code.
 """
 
-from .fleurinput import FleurInput
+from .fleurinput import FleurInput  # pylint: disable=import-error
 
 __all__ = ("FleurInput",)
 
