@@ -77,7 +77,11 @@ jobs:
         pip install --no-deps -e .
     - name: pytest
       run: |
-        pytest --cov=pymatgen.io.fleur --durations=30 pymatgen
+        pytest
+    - name: Upload code coverage report
+      run: |
+        pip install codecov
+        codecov
 
   publish:
     name: Publish to PyPi

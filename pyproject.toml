@@ -31,6 +31,12 @@ dependencies = [
           "masci-tools>=0.5.0",
         ]
 
+[project.optional-dependencies]
+testing = [
+  "pytest~=6.0",
+  "pytest-cov~=3.0",
+]
+
 [project.urls]
 Home = "https://github.com/JuDFTteam/pymatgen-io-fleur"
 Source = "https://github.com/JuDFTteam/pymatgen-io-fleur"
@@ -39,7 +45,11 @@ Source = "https://github.com/JuDFTteam/pymatgen-io-fleur"
 name = "pymatgen.io.fleur"
 
 [tool.pytest.ini_options]
-addopts = "--durations=30 --quiet"
+minversion = "6.0"
+addopts = "--durations=30 --quiet --cov=pymatgen/io/fleur  --cov-report=xml"
+testpaths=[
+  'pymatgen'
+]
 
 [tool.pydocstyle]
 ignore = ["D105","D2","D4"]
@@ -47,25 +57,6 @@ match-dir="(?!(tests)).*"
 
 [tool.mypy]
 ignore_missing_imports = true
-
-[tool.coverage.run]
-omit = [
-  "*tests*"
-]
-relative_files = true
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "if self.debug:",
-    "if settings.DEBUG",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if 0:",
-    "if __name__ == .__main__.:",
-    "@deprecated",
-]
 
 [tool.black]
 line-length = 120
