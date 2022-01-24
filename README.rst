@@ -75,7 +75,7 @@ License
    :target: https://pypi.org/project/pymatgen-io-fleur/
 .. |PyPI pyversion| image:: https://img.shields.io/pypi/pyversions/pymatgen-io-fleur
    :target: https://pypi.org/project/pymatgen-io-fleur/
-.. |Build status| image:: https://github.com/JuDFTteam/pymatgen-io-fleur/workflows/pymatgen-io-fleur/badge.svg?branch=develop&event=push
+.. |Build status| image:: https://github.com/JuDFTteam/pymatgen-io-fleur/actions/workflows/testing.yml/badge.svg?branch=develop&event=push
    :target: https://github.com/JuDFTteam/pymatgen-io-fleur/actions
 .. |Coverage Status| image:: https://codecov.io/gh/JuDFTteam/pymatgen-io-fleur/branch/develop/graph/badge.svg
    :target: https://codecov.io/gh/JuDFTteam/pymatgen-io-fleur
