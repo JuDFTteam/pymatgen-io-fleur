@@ -9,7 +9,7 @@ description= "A pymatgen add-on for IO for the fleur code."
 authors = [{name = "The JuDFT team", email = "he.janssen@fz-juelich.de"}]
 readme = "README.rst"
 license = {file = "LICENSE"}
-cclassifiers=[
+classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
