@@ -1,3 +1,5 @@
+|MIT license| |Github version| |PyPi version| |PyPi pyversion| |Build status| |Coverage status|
+
 Pymatgen-io-fleur
 =========================
 
@@ -64,3 +66,16 @@ License
 ++++++++
 
 *pymatgen-io-fleur* is distributed under the terms and conditions of the MIT license.
+
+.. |MIT license| image:: https://img.shields.io/badge/license-MIT-blue.svg
+   :target: LICENSE
+.. |GitHub version| image:: https://img.shields.io/github/v/tag/JuDFTTeam/pymatgen-io-fleur?include_prereleases&label=GitHub%20version&logo=GitHub
+   :target: https://github.com/JuDFTteam/pymatgen-io-fleur/releases
+.. |PyPI version| image:: https://img.shields.io/pypi/v/pymatgen-io-fleur
+   :target: https://pypi.org/project/pymatgen-io-fleur/
+.. |PyPI pyversion| image:: https://img.shields.io/pypi/pyversions/pymatgen-io-fleur
+   :target: https://pypi.org/project/pymatgen-io-fleur/
+.. |Build status| image:: https://github.com/JuDFTteam/pymatgen-io-fleur/workflows/pymatgen-io-fleur/badge.svg?branch=develop&event=push
+   :target: https://github.com/JuDFTteam/pymatgen-io-fleur/actions
+.. |Coverage Status| image:: https://codecov.io/gh/JuDFTteam/pymatgen-io-fleur/branch/develop/graph/badge.svg
+   :target: https://codecov.io/gh/JuDFTteam/pymatgen-io-fleur
