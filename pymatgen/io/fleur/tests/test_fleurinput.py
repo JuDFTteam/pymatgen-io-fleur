@@ -20,7 +20,9 @@ class FleurInputTest(PymatgenTest):
     TEST_FILES_DIR = TEST_FILES_DIR
 
     def test_mson_serializable(self):
-
+        """
+        Test that the Fleurinput class correctly serializes
+        """
         param = 5.130606429
         cell = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]

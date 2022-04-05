@@ -21,23 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements-ci.txt --quiet
-        pip install -e .
-    - name: mypy
+        pip install -e .[pre-commit]
+    - name: Run pre-commit
       run: |
-        mypy --namespace-packages --explicit-package-bases pymatgen
-    - name: black
-      run: |
-        black --version
-        black --check --diff --color pymatgen
-    - name: flake8
-      run: |
-        flake8 --count --show-source --statistics pymatgen
-        # exit-zero treats all errors as warnings.
-        flake8 --count --exit-zero --max-complexity=20 --statistics pymatgen
-    - name: pydocstyle
-      run: |
-        pydocstyle --count pymatgen
-    - name: pylint
-      run: |
-        pylint pymatgen
+        pre-commit run --all-files || (git status --short; git diff ; exit 1)
