@@ -36,6 +36,10 @@ testing = [
   "pytest~=6.0",
   "pytest-cov~=3.0",
 ]
+pre-commit = [
+  "pydocstyle[toml]~=6.1.1",
+  "pylint~=2.12.2"
+]
 
 [project.urls]
 Home = "https://github.com/JuDFTteam/pymatgen-io-fleur"
