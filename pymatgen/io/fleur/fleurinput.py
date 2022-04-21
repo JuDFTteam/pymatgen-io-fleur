@@ -7,7 +7,8 @@
 This module provides functionality and classes for creating pymatgen structures
 from fleur input files (http://flapw.de).
 """
-from typing import Tuple, Union, Any
+import warnings
+from typing import Union, Any
 from pathlib import Path
 from monty.io import zopen
 from monty.json import MSONable
@@ -32,10 +33,6 @@ class FleurInput(MSONable):
 
         Optional title string.
 
-    .. attribute:: pbc
-
-        Tuple detemining in which directions there are periodic boundary conditions.
-
     .. attribute:: lapw_parameters
 
         Dict with additional LAPW calculation parameters
@@ -46,27 +43,29 @@ class FleurInput(MSONable):
         self,
         structure: Structure,
         title: str = None,
-        pbc: Tuple[bool, bool, bool] = (True, True, True),
         lapw_parameters: dict = None,
+        **kwargs: Any,
     ):
         """
         Args:
             structure (Structure):  Structure object.
             title (str): Optional title for fleur input. Defaults to unit
                          cell formula of structure. Defaults to None.
-            pbc (tuple of bools): Defines in which directions periodic boundary
-                                  conditions apply
             lapw_parameters (dict): Defines additional calculation parameters for FLEUR
 
         """
+        if "pbc" in kwargs:
+            warnings.warn(
+                "The argument pbc to FleurInput is deprecated.\n"
+                "Use the Structure directly to store this information",
+                DeprecationWarning,
+            )
 
         if structure.is_ordered:
             self.structure = structure
-            self.title = structure.formula if not title else title
-            self.pbc = pbc
-            if lapw_parameters is None:
-                self.lapw_parameters = {}
-            else:
+            self.title = title or structure.formula
+            self.lapw_parameters = {}
+            if lapw_parameters is not None:
                 self.lapw_parameters = lapw_parameters
         else:
             raise ValueError("Structure with partial occupancies cannot be " "converted into fleur input!")
@@ -81,13 +80,13 @@ class FleurInput(MSONable):
             inpgen_input (bool): if True the input will be presumed to be a inpgen file
                                  otherwise it is parsed into an xml tree and interpreted as a inp.xml file
 
-        Kwargs are passed on to :py:func:`~masci_tools.io.io_fleurxml.load_inpxml()` if the input
+        Kwargs are passed on to :py:func:`~masci_tools.io.fleur_xml.load_inpxml()` if the input
         is interpreted as a XML file
 
         returns: :py:class:`FleurInput` generated from the information read in from the data
         """
         from masci_tools.io.fleur_inpgen import read_inpgen_file
-        from masci_tools.io.io_fleurxml import load_inpxml
+        from masci_tools.io.fleur_xml import load_inpxml
         from masci_tools.util.xml.xml_getters import get_structure_data, get_parameter_data
 
         if inpgen_input:
@@ -95,16 +94,16 @@ class FleurInput(MSONable):
             title_in = parameters.pop("title", "")
         else:
             xmltree, schema_dict = load_inpxml(data, **kwargs)
-            atoms, cell, pbc = get_structure_data(xmltree, schema_dict, site_namedtuple=True)
+            atoms, cell, pbc = get_structure_data(xmltree, schema_dict)
             parameters = get_parameter_data(xmltree, schema_dict)
             title_in = parameters.pop("title", "")
 
         positions, elements, _ = zip(*atoms)
         # create lattice and structure object
-        lattice_in = Lattice(cell)
+        lattice_in = Lattice(cell, pbc=pbc)
         structure_in = Structure(lattice_in, elements, positions, coords_are_cartesian=True)
 
-        return FleurInput(structure_in, title_in, pbc=pbc, lapw_parameters=parameters)
+        return FleurInput(structure_in, title_in, lapw_parameters=parameters)
 
     @staticmethod
     def from_file(filename: PathLike) -> "FleurInput":
@@ -159,6 +158,7 @@ class FleurInput(MSONable):
         return write_inpgen_file(
             self.structure.lattice.matrix,
             atom_sites,
+            pbc=self.structure.lattice.pbc,
             return_contents=True,
             input_params=parameters,
             **kwargs,
@@ -174,7 +174,6 @@ class FleurInput(MSONable):
             "structure": self.structure.as_dict(),
             "title": self.title,
             "lapw_parameters": self.lapw_parameters,
-            "pbc": self.pbc,
         }
 
     @classmethod
@@ -187,7 +186,6 @@ class FleurInput(MSONable):
             Structure.from_dict(d["structure"]),
             title=d["title"],
             lapw_parameters=d["lapw_parameters"],
-            pbc=d["pbc"],
         )
 
     def __repr__(self) -> str:
