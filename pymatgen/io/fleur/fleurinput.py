@@ -91,13 +91,11 @@ class FleurInput(MSONable):
         from masci_tools.util.xml.xml_getters import get_structure_data, get_parameter_data
 
         if inpgen_input:
-            cell, atoms, pbc, parameters = read_inpgen_file(data, convert_to_angstroem=False)
+            cell, atoms, pbc, parameters = read_inpgen_file(data)
             title_in = parameters.pop("title", "")
         else:
             xmltree, schema_dict = load_inpxml(data, **kwargs)
-            atoms, cell, pbc = get_structure_data(
-                xmltree, schema_dict, site_namedtuple=True, convert_to_angstroem=False
-            )
+            atoms, cell, pbc = get_structure_data(xmltree, schema_dict, site_namedtuple=True)
             parameters = get_parameter_data(xmltree, schema_dict)
             title_in = parameters.pop("title", "")
 
@@ -163,7 +161,6 @@ class FleurInput(MSONable):
             atom_sites,
             return_contents=True,
             input_params=parameters,
-            convert_from_angstroem=False,
             **kwargs,
         )
 

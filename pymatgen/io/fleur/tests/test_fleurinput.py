@@ -52,7 +52,7 @@ class FleurInputTest(PymatgenTest):
 
         f = FleurInput.from_file(TEST_FILES_DIR / "inp_test")
 
-        param = 5.130606429
+        param = 2.715
         lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
@@ -83,7 +83,7 @@ class FleurInputTest(PymatgenTest):
         """
         f = FleurInput.from_file(TEST_FILES_DIR / "inp.xml")
 
-        param = 5.1306085
+        param = 2.7150011
         lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.125, 0.125, 0.125], [-0.125, -0.125, -0.125]]
@@ -114,7 +114,7 @@ class FleurInputTest(PymatgenTest):
         """
         Test of the get_inpgen_file_content method
         """
-        param = 5.130606429
+        param = 2.715
         cell = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
@@ -196,7 +196,7 @@ class FleurInputStructureIntegrationTest(PymatgenTest):
 
         s = Structure.from_str(content, fmt="fleur-inpgen")
 
-        param = 5.130606429
+        param = 2.715
         lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
@@ -215,7 +215,7 @@ class FleurInputStructureIntegrationTest(PymatgenTest):
 
         s = Structure.from_str(content, fmt="fleur")
 
-        param = 5.1306085
+        param = 2.7150011
         lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.125, 0.125, 0.125], [-0.125, -0.125, -0.125]]
@@ -229,7 +229,7 @@ class FleurInputStructureIntegrationTest(PymatgenTest):
         Test that the to method of Structure produces the right output for the inpgen format
         """
 
-        param = 5.130606429
+        param = 2.715
         cell = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
@@ -259,7 +259,7 @@ class FleurInputStructureIntegrationTest(PymatgenTest):
 
         s = Structure.from_file(TEST_FILES_DIR / "inp_test")
 
-        param = 5.130606429
+        param = 2.715
         lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
@@ -281,7 +281,7 @@ class FleurInputStructureIntegrationTest(PymatgenTest):
                 f.write(content)
             s = Structure.from_file(Path(td) / "aiida.in")
 
-        param = 5.130606429
+        param = 2.715
         lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
@@ -296,7 +296,7 @@ class FleurInputStructureIntegrationTest(PymatgenTest):
         """
         s = Structure.from_file(TEST_FILES_DIR / "inp.xml")
 
-        param = 5.1306085
+        param = 2.7150011
         lattice = [[0, param, param], [param, 0, param], [param, param, 0]]
         atoms = ["Si", "Si"]
         fraccoords = [[0.125, 0.125, 0.125], [-0.125, -0.125, -0.125]]
