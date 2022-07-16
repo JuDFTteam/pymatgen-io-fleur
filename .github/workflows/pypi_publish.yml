@@ -39,7 +39,8 @@ jobs:
       max-parallel: 20
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.7","3.8","3.9","3.10"]
+        python-version: ["3.8","3.9","3.10"]
+      fail-fast: false
 
     runs-on: ${{ matrix.os }}
 
@@ -52,8 +53,8 @@ jobs:
     - name: Build pymatgen with compatible numpy
       run: |
         python -m pip install --upgrade pip
-        pip install numpy==1.21.4 wheel
-        pip install pymatgen==2022.0.16 --no-cache-dir --no-build-isolation
+        pip install numpy==1.21.4 wheel cython
+        pip install pymatgen==2022.7.8 --no-cache-dir --no-build-isolation
     - name: Install dependencies
       run: |
         pip install --quiet -r requirements-ci.txt
