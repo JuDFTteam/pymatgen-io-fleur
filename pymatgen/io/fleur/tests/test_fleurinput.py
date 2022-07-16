@@ -77,6 +77,33 @@ class FleurInputTest(PymatgenTest):
         self.assertEqual(parameters, f.lapw_parameters)
         self.assertEqual(title, f.title)
 
+    def test_from_file_inpgen_film(self):
+        """
+        Test generation of FleurInput from a inpgen file
+        """
+
+        f = FleurInput.from_file(TEST_FILES_DIR / "inp_test_film")
+
+        lattice = [
+            [3.316879676424679, 0.0, 0.0],
+            [1.6584398382123395, 2.3453881117376385, 0.0],
+            [0.0, 0.0, 13.349076054650814],
+        ]
+        atoms = ["Fe", "Nb", "Nb"]
+        fraccoords = [[0.5, 0, 0.6149383], [0, 0, 0.7563352], [0.5, 0, 0.9340214]]
+
+        title = "A Fleur input generator calculation with aiida"
+        parameters = {
+            "input": {"cartesian": False, "film": True},
+            "comp": {"kmax": 5.0, "gmaxxc": 12.5, "gmax": 15.0},
+        }
+        print(f.lapw_parameters)
+        self.assertArrayAlmostEqual(lattice, f.structure.lattice.matrix.tolist())
+        self.assertEqual(atoms, [site.specie.symbol for site in f.structure])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in f.structure])
+        self.assertEqual(parameters, f.lapw_parameters)
+        self.assertEqual(title, f.title)
+
     def test_from_file_xml(self):
         """
         Test generation of FleurInput from a inp.xml file
@@ -101,6 +128,49 @@ class FleurInputTest(PymatgenTest):
                 "lo": "2s 2p",
                 "id": "14.1",
             },
+            "exco": {"xctyp": "pbe"},
+        }
+
+        self.assertArrayAlmostEqual(lattice, f.structure.lattice.matrix.tolist())
+        self.assertEqual(atoms, [site.specie.symbol for site in f.structure])
+        self.assertArrayAlmostEqual(fraccoords, [site.frac_coords.tolist() for site in f.structure])
+        self.assertEqual(parameters, f.lapw_parameters)
+        self.assertEqual(title, f.title)
+
+    def test_from_file_xml_film(self):
+        """
+        Test generation of FleurInput from a inp.xml file
+        """
+        f = FleurInput.from_file(TEST_FILES_DIR / "inp_film.xml")
+
+        lattice = [[2.8052635, 0.0, 0.0], [0.0, 3.9672416, 0.0], [0.0, 0.0, 6.572381]]
+        atoms = ["Fe", "Pt", "Pt"]
+        fraccoords = [[0.0, 0.0, -0.1604549], [0.5, 0.5, 0.0], [0.0, 0.0, 0.213413]]
+
+        title = "Fe/Pt"
+        parameters = {
+            "comp": {"jspins": 2, "frcor": False, "ctail": False, "kcrel": 0, "gmax": 9.6, "gmaxxc": 9.6, "kmax": 3.2},
+            "atom0": {
+                "id": "26.1",
+                "rmt": 2.21,
+                "dx": 0.017,
+                "jri": 731,
+                "lmax": 6,
+                "lnonsph": 4,
+                "element": "Fe",
+                "lo": "3s 3p",
+            },
+            "atom1": {
+                "id": "78.1",
+                "rmt": 2.21,
+                "dx": 0.018,
+                "jri": 731,
+                "lmax": 6,
+                "lnonsph": 4,
+                "element": "Pt",
+                "lo": "5p",
+            },
+            "kpt": {"div1": 8, "div2": 12, "div3": 1},
             "exco": {"xctyp": "pbe"},
         }
 
@@ -167,6 +237,26 @@ class FleurInputTest(PymatgenTest):
         f = FleurInput.from_file(TEST_FILES_DIR / "inp_test")
 
         with open(TEST_FILES_DIR / "inp_test", "r", encoding="utf8") as file:
+            original = file.read()
+
+        with tempfile.NamedTemporaryFile(mode="w") as tmp:
+            f.write_file(tmp.name)
+            with open(tmp.name, "r", encoding="utf8") as inp:
+                res = inp.read()
+
+        print(original)
+        print(res)
+        self.assertTrue(self.assertStrContentEqual(original, res))
+
+    def test_inpgen_file_roundtrip_film(self):
+        """
+        Test that the inpgen file can be reproduced reading it in and writing back out
+        """
+        import tempfile
+
+        f = FleurInput.from_file(TEST_FILES_DIR / "inp_test_film")
+
+        with open(TEST_FILES_DIR / "inp_test_film", "r", encoding="utf8") as file:
             original = file.read()
 
         with tempfile.NamedTemporaryFile(mode="w") as tmp:
