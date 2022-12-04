@@ -154,10 +154,10 @@ class FleurInput(MSONable):
         if "title" not in parameters:
             parameters["title"] = self.title
 
-        atom_sites = [AtomSiteProperties(position=site.coords, 
-                                         symbol=site.specie.symbol,
-                                         kind=site.specie.symbol)
-                      for site in self.structure.sites]
+        atom_sites = [
+            AtomSiteProperties(position=site.coords, symbol=site.specie.symbol, kind=site.specie.symbol)
+            for site in self.structure.sites
+        ]
 
         return write_inpgen_file(
             self.structure.lattice.matrix,
