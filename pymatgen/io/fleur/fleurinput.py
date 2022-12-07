@@ -8,7 +8,7 @@ This module provides functionality and classes for creating pymatgen structures
 from fleur input files (http://flapw.de).
 """
 import warnings
-from typing import Union, Any
+from typing import Optional, Union, Any
 from pathlib import Path
 from monty.io import zopen
 from monty.json import MSONable
@@ -42,8 +42,8 @@ class FleurInput(MSONable):
     def __init__(
         self,
         structure: Structure,
-        title: str = None,
-        lapw_parameters: dict = None,
+        title: Optional[str] = None,
+        lapw_parameters: Optional[dict] = None,
         **kwargs: Any,
     ):
         """
@@ -98,7 +98,7 @@ class FleurInput(MSONable):
             parameters = get_parameter_data(xmltree, schema_dict)
             title_in = parameters.pop("title", "")
 
-        positions, elements, _ = zip(*atoms)
+        positions, elements = zip(*[(site.position, site.symbol) for site in atoms])
         # create lattice and structure object
         lattice_in = Lattice(cell, pbc=pbc)
         structure_in = Structure(lattice_in, elements, positions, coords_are_cartesian=True)
@@ -128,7 +128,7 @@ class FleurInput(MSONable):
         return FleurInput.from_string(data, inpgen_input=inpgen_input, base_url=filename)
 
     def get_inpgen_file_content(
-        self, parameters: dict = None, ignore_set_parameters: bool = False, **kwargs: Union[int, bool]
+        self, parameters: Optional[dict] = None, ignore_set_parameters: bool = False, **kwargs: Union[int, bool]
     ):
         """
         Produce the inpgen input file corresponding to the given information
@@ -143,6 +143,7 @@ class FleurInput(MSONable):
         returns: str of the inpgen input file
         """
         from masci_tools.io.fleur_inpgen import write_inpgen_file
+        from masci_tools.io.common_functions import AtomSiteProperties
 
         if parameters is None:
             parameters = {}
@@ -153,7 +154,10 @@ class FleurInput(MSONable):
         if "title" not in parameters:
             parameters["title"] = self.title
 
-        atom_sites = [(site.coords, site.specie.symbol, site.specie.symbol) for site in self.structure.sites]
+        atom_sites = [
+            AtomSiteProperties(position=site.coords, symbol=site.specie.symbol, kind=site.specie.symbol)
+            for site in self.structure.sites
+        ]
 
         return write_inpgen_file(
             self.structure.lattice.matrix,
