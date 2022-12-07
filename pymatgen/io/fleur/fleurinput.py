@@ -8,7 +8,7 @@ This module provides functionality and classes for creating pymatgen structures
 from fleur input files (http://flapw.de).
 """
 import warnings
-from typing import Union, Any
+from typing import Optional, Union, Any
 from pathlib import Path
 from monty.io import zopen
 from monty.json import MSONable
@@ -42,8 +42,8 @@ class FleurInput(MSONable):
     def __init__(
         self,
         structure: Structure,
-        title: str = None,
-        lapw_parameters: dict = None,
+        title: Optional[str] = None,
+        lapw_parameters: Optional[dict] = None,
         **kwargs: Any,
     ):
         """
@@ -128,7 +128,7 @@ class FleurInput(MSONable):
         return FleurInput.from_string(data, inpgen_input=inpgen_input, base_url=filename)
 
     def get_inpgen_file_content(
-        self, parameters: dict = None, ignore_set_parameters: bool = False, **kwargs: Union[int, bool]
+        self, parameters: Optional[dict] = None, ignore_set_parameters: bool = False, **kwargs: Union[int, bool]
     ):
         """
         Produce the inpgen input file corresponding to the given information
