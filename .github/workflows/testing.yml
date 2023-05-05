@@ -27,7 +27,5 @@ jobs:
     - name: pytest
       run: |
         pytest
-    - name: Upload code coverage report
-      run: |
-        pip install codecov
-        codecov
+    - name: Upload to Codecov
+      uses: codecov/codecov-action@v3
