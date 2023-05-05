@@ -87,15 +87,15 @@ class FleurInput(MSONable):
         """
         from masci_tools.io.fleur_inpgen import read_inpgen_file
         from masci_tools.io.fleur_xml import load_inpxml
-        from masci_tools.util.xml.xml_getters import get_structure_data, get_parameter_data
+        from masci_tools.util.xml.xml_getters import get_structuredata, get_parameterdata
 
         if inpgen_input:
             cell, atoms, pbc, parameters = read_inpgen_file(data)
             title_in = parameters.pop("title", "")
         else:
             xmltree, schema_dict = load_inpxml(data, **kwargs)
-            atoms, cell, pbc = get_structure_data(xmltree, schema_dict)
-            parameters = get_parameter_data(xmltree, schema_dict)
+            atoms, cell, pbc = get_structuredata(xmltree, schema_dict)
+            parameters = get_parameterdata(xmltree, schema_dict)
             title_in = parameters.pop("title", "")
 
         positions, elements = zip(*[(site.position, site.symbol) for site in atoms])
