@@ -8,10 +8,10 @@ on:
 jobs:
 
   linting:
-    uses: ./github/workflows/linting.yml
+    uses: ./.github/workflows/linting.yml
 
   tests:
-    uses: ./github/workflows/testing.yml
+    uses: ./.github/workflows/testing.yml
 
   publish:
     name: Publish to PyPi
