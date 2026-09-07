@@ -7,6 +7,7 @@
 This module provides functionality and classes for creating pymatgen structures
 from fleur input files (http://flapw.de).
 """
+
 import warnings
 from typing import Optional, Union, Any
 from pathlib import Path
